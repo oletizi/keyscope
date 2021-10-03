@@ -1,8 +1,11 @@
-import * as yaml from 'js-yaml'
-import * as fs from 'fs';
-import * as x509 from "@peculiar/x509";
-import {Base64} from "js-base64"
-import {SubjectAlternativeNameExtension} from "@peculiar/x509";
+//import * as yaml from 'js-yaml'
+const yaml = require('js-yaml')
+const fs = require('fs')
+const x509 = require('@peculiar/x509')
+const Base64 = require('js-base64')
+const {cert2String} = require('./lib/cert')
+
+// import {SubjectAlternativeNameExtension} from "@peculiar/x509";
 
 const secret = yaml.load(fs.readFileSync('test/resources/secret.yaml'))
 const tlsCrt = secret.data['tls.crt']
@@ -18,21 +21,6 @@ for (let i = 0; i < certs.length; i++) {
     // console.log('SAN')
     // console.log(sanExtension)
 }
-
-function cert2String(cert) {
-    return `
-serialNumber           : ${cert.serialNumber}
-subject                : ${cert.subject}
-issuer                 : ${cert.issuer}
-signatureAlgorithm.name: ${cert.signatureAlgorithm.name}
-signatureAlgorithm.hash: ${cert.signatureAlgorithm.hash.name}
-notBefore              : ${cert.notBefore}
-notAfter               : ${cert.notAfter}
-
-`.trim()
-
-}
-
 function getCerts(raw) {
     const lines = raw.split(/\r\n|\n/)
     let buf = ""
