@@ -3,14 +3,14 @@ const yaml = require('js-yaml')
 const fs = require('fs')
 const x509 = require('@peculiar/x509')
 const Base64 = require('js-base64')
-const {cert2String} = require('./lib/cert')
+const {cert2String, splitCerts} = require('./lib/cert')
 
 // import {SubjectAlternativeNameExtension} from "@peculiar/x509";
 
 const secret = yaml.load(fs.readFileSync('test/resources/secret.yaml'))
 const tlsCrt = secret.data['tls.crt']
 const tlsCrtDecoded = Base64.decode(tlsCrt)
-const certs = getCerts(tlsCrtDecoded)
+const certs = splitCerts(tlsCrtDecoded)
 for (let i = 0; i < certs.length; i++) {
     const certRaw = certs[i]
     const cert = new x509.X509Certificate(certRaw)
@@ -21,26 +21,4 @@ for (let i = 0; i < certs.length; i++) {
     // console.log('SAN')
     // console.log(sanExtension)
 }
-function getCerts(raw) {
-    const lines = raw.split(/\r\n|\n/)
-    let buf = ""
-    const buffers = []
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i]
-        switch (line) {
-            case "-----BEGIN CERTIFICATE-----":
-                // begin cert
-                buf += line + '\n'
-                break;
-            case "-----END CERTIFICATE-----":
-                // end cert
-                buf += line + '\n'
-                buffers.push(buf)
-                buf = ""
-                break
-            default:
-                buf += line + '\n'
-        }
-    }
-    return buffers
-}
+
