@@ -1,0 +1,19 @@
+{
+  "name": "keyscope",
+  "version": "1.0.0",
+  "description": "thing to look at keys",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "main": "node index.js",
+    "test": "node test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@peculiar/x509": "^1.4.1",
+    "js-base64": "^3.7.2",
+    "js-yaml": "^4.1.0",
+    "node-forge": "^0.10.0"
+  }
+}
